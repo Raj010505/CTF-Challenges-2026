@@ -1,0 +1,16 @@
+{
+  "name": "vercel-ctf-shopping-cart",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CTF challenge: vulnerable coupon flow to buy hidden flag item",
+  "scripts": {
+    "start": "node -e \"console.log('Use: npx vercel dev')\"",
+    "dev:local": "node local-dev.js"
+  },
+  "devDependencies": {
+    "vercel": "^39.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

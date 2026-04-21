@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neth3r Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Sora:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #06151a;
+        --panel: rgba(6, 25, 32, 0.75);
+        --panel-border: rgba(117, 220, 190, 0.25);
+        --text: #d9fff5;
+        --muted: #95bcb2;
+        --accent: #76f7c6;
+        --accent-deep: #1fb389;
+        --warning: #ffd37d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Sora", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 15% 20%, rgba(31, 179, 137, 0.2), transparent 45%),
+          radial-gradient(circle at 80% 0%, rgba(118, 247, 198, 0.15), transparent 40%),
+          linear-gradient(160deg, #02080b 0%, #05151b 55%, #031017 100%);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .shell {
+        width: min(960px, 100%);
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        border-radius: 18px;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      }
+
+      .catalog {
+        padding: 28px;
+      }
+
+      .checkout {
+        padding: 22px;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        font-family: "Chakra Petch", sans-serif;
+        letter-spacing: 0.04em;
+      }
+
+      h1 {
+        font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        color: var(--muted);
+      }
+
+      .subtitle {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .item {
+        margin-top: 22px;
+        border: 1px solid rgba(118, 247, 198, 0.2);
+        border-radius: 14px;
+        padding: 18px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .item-title {
+        font-family: "Chakra Petch", sans-serif;
+        font-size: 1.2rem;
+      }
+
+      .item-price {
+        color: var(--warning);
+        font-size: 1.15rem;
+        font-weight: 600;
+      }
+
+      .meta-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        color: var(--muted);
+      }
+
+      .coupon-box {
+        display: grid;
+        gap: 10px;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid rgba(118, 247, 198, 0.35);
+        border-radius: 10px;
+        background: rgba(3, 18, 23, 0.9);
+        color: var(--text);
+        padding: 12px;
+        font-size: 0.92rem;
+        outline: none;
+      }
+
+      button {
+        border: 0;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn-secondary {
+        background: linear-gradient(110deg, #0b4b3a, #12815f);
+        color: #e7fff7;
+      }
+
+      .btn-primary {
+        width: 100%;
+        margin-top: 18px;
+        background: linear-gradient(110deg, #2ce5a8, #75f6c4);
+        color: #042219;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 7px 25px rgba(7, 165, 118, 0.35);
+      }
+
+      .totals {
+        margin-top: 18px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .line {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.94rem;
+      }
+
+      .line strong {
+        color: var(--warning);
+      }
+
+      .status {
+        min-height: 26px;
+        margin-top: 14px;
+        color: var(--muted);
+      }
+
+      .flag {
+        margin-top: 12px;
+        border: 1px solid rgba(255, 211, 125, 0.4);
+        background: rgba(255, 211, 125, 0.08);
+        color: #ffe5aa;
+        border-radius: 10px;
+        padding: 10px;
+        font-family: "Chakra Petch", monospace;
+        word-break: break-all;
+      }
+
+      @media (max-width: 860px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="catalog panel">
+        <h1>Neth3r Cart</h1>
+        <p class="subtitle">Acquisition terminal for restricted digital goods.</p>
+        <div class="item">
+          <div class="item-title" id="item-name">Loading item...</div>
+          <div class="item-price" id="item-price">INR 0</div>
+          <div class="subtitle">Quantity: 1</div>
+        </div>
+      </section>
+
+      <section class="checkout panel">
+        <div class="meta-row">
+          <h2>Wallet</h2>
+          <span id="wallet-balance">INR 0</span>
+        </div>
+
+        <div class="coupon-box">
+          <label for="coupon">Coupon Code</label>
+          <input id="coupon" placeholder="Enter coupon" autocomplete="off" />
+          <button class="btn-secondary" id="apply-coupon">Apply Coupon</button>
+        </div>
+
+        <div class="totals">
+          <div class="line"><span>Subtotal</span><strong id="subtotal">INR 0</strong></div>
+          <div class="line"><span>Discount</span><strong id="discount">0%</strong></div>
+          <div class="line"><span>Total</span><strong id="total">INR 0</strong></div>
+        </div>
+
+        <button class="btn-primary" id="checkout">Checkout</button>
+        <div class="status" id="status"></div>
+        <div class="flag" id="flag" hidden></div>
+      </section>
+    </main>
+
+    <script>
+      const state = {
+        itemPrice: 0,
+        itemName: "",
+        wallet: 0,
+        couponCode: "",
+        discountPercent: 0
+      };
+
+      function formatINR(value) {
+        return `INR ${value}`;
+      }
+
+      function updateTotals() {
+        const subtotal = state.itemPrice;
+        const discountValue = Math.floor((subtotal * state.discountPercent) / 100);
+        const total = Math.max(0, subtotal - discountValue);
+
+        document.getElementById("subtotal").textContent = formatINR(subtotal);
+        document.getElementById("discount").textContent = `${state.discountPercent}%`;
+        document.getElementById("total").textContent = formatINR(total);
+      }
+
+      async function loadData() {
+        const [itemsRes, walletRes] = await Promise.all([
+          fetch("/api/items"),
+          fetch("/api/wallet")
+        ]);
+
+        const itemsData = await itemsRes.json();
+        const walletData = await walletRes.json();
+
+        const item = itemsData.items[0];
+        state.itemName = item.name;
+        state.itemPrice = item.price;
+        state.wallet = walletData.wallet.balance;
+
+        document.getElementById("item-name").textContent = state.itemName;
+        document.getElementById("item-price").textContent = formatINR(state.itemPrice);
+        document.getElementById("wallet-balance").textContent = formatINR(state.wallet);
+
+        updateTotals();
+      }
+
+      function setStatus(message) {
+        document.getElementById("status").textContent = message;
+      }
+
+      async function applyCoupon() {
+        const couponInput = document.getElementById("coupon");
+        const couponCode = couponInput.value.trim();
+        state.couponCode = couponCode;
+
+        const res = await fetch("/api/coupon/apply", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ couponCode })
+        });
+        const data = await res.json();
+
+        state.discountPercent = data.valid ? data.discountPercent : 0;
+        updateTotals();
+        setStatus(data.valid ? "Coupon applied." : "Coupon invalid.");
+      }
+
+      async function checkout() {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ couponCode: state.couponCode })
+        });
+        const data = await res.json();
+
+        if (!data.purchased) {
+          setStatus(data.message || "Checkout failed.");
+          document.getElementById("flag").hidden = true;
+          return;
+        }
+
+        setStatus("Purchase complete.");
+        const flagEl = document.getElementById("flag");
+        flagEl.hidden = false;
+        flagEl.textContent = data.flag;
+      }
+
+      document.getElementById("apply-coupon").addEventListener("click", () => {
+        applyCoupon().catch(() => setStatus("Unable to apply coupon."));
+      });
+
+      document.getElementById("checkout").addEventListener("click", () => {
+        checkout().catch(() => setStatus("Unable to checkout."));
+      });
+
+      loadData().catch(() => setStatus("Unable to initialize store."));
+    </script>
+  </body>
+</html>
