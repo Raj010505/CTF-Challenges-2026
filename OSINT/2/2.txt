@@ -1,0 +1,45 @@
+Official Writeup: Algorush Admin
+Category: OSINT / Reconnaissance
+Difficulty: Easy/Medium
+
+Challenge Overview
+The objective of this challenge is to track down the digital footprint of a specific past event and pivot through its associated communication channels to locate the hidden flag.
+
+Step-by-Step Solution
+Step 1: Initial Reconnaissance
+The challenge begins at the main organization domain.
+
+Navigate to the official website: https://csesa.live.
+
+Browse through the site structure and locate the "Past Events" section.
+
+Step 2: Identifying the Target Asset
+
+Scroll through the archive of past events until you find the event named "Algorush".
+
+Notice that this specific event has a dedicated external link. Click the link to pivot to the official Algorush event website.
+
+Step 3: Deep Web Surface Recon
+Now on the Algorush domain, the goal is to find how the organizers communicated with attendees.
+
+Scour the Algorush website's landing page, footer, and contact sections.
+
+Locate the "Join WhatsApp Group" invite link/button hidden on the page.
+
+Step 4: Platform-Specific OSINT (WhatsApp)
+
+Click the invite link to join the Algorush WhatsApp group.
+
+Once inside, check the group participant list. You will notice the group is very small, containing only 2 members.
+
+Identify the user with the "Admin" privilege.
+
+Step 5: Extracting the Flag
+
+Click on the Admin's profile to view their detailed contact card.
+
+Inspect the "About" section (or Member Tag) of the Admin's profile.
+
+The flag is stored directly in plain text within this tag.
+
+Flag: [Insert Your Flag Format Here, e.g., CSESA{h1dd3n_1n_pl41n_s1ght}]

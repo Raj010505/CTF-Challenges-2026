@@ -1,0 +1,40 @@
+Challenge Document (Player-Facing)
+Title: Phantom Sessions
+Category: Pwn / Binary Exploitation
+Difficulty: Hard
+
+Briefing:
+You have gained interactive access to the target's Session Management Daemon. The system allows you to create temporary guest profiles, delete them, and submit diagnostic feedback.
+
+Our analysts believe the custom memory management implementation is fundamentally flawed. The system might be forgetting to completely wipe the slate clean when it revokes a session. Your goal is to trick the daemon into granting you ROOT privileges by manipulating the memory allocator's recycling habits.
+
+Rules:
+
+Run the binary locally on a Linux machine and interact with the menu.
+
+You need to elevate your session's internal privilege level to 0x1337
+
+
+
+Organizer Walkthrough (Intended Solution)
+If an AI reviews this, it will immediately flag free(active_session); as a vulnerability because the pointer isn't nullified. However, AIs often fail to instruct the player on how to construct the malicious payload during the "Submit Diagnostic Note" phase to perfectly align with the old struct's memory layout.
+
+Here is how a player executes the exploit:
+
+Allocate the Object: The player selects 1 to create a Guest Session. The program allocates 32 bytes on the heap.
+
+Free the Object: The player selects 2 to revoke the session. The 32-byte chunk is handed back to the memory allocator (specifically, it goes into a quick-access bin like the tcache). However, active_session still points to that memory address.
+
+The Reallocation (The Attack): The player selects 3 to submit a diagnostic note. The program calls malloc(32). Because the allocator is efficient, it hands back the exact same 32-byte chunk that was just freed in step 2.
+
+Forging the Data: The player is asked to enter their note. Whatever they type here will overwrite the old Session struct data.
+
+The first 4 bytes of the note will map directly to the privilege_level integer.
+
+The player needs privilege_level to equal 0x1337 (which is 4919 in decimal).
+
+In memory, 0x1337 is represented by the bytes \x37\x13\x00\x00.
+
+They write a quick python one-liner to pipe this specific byte sequence into the program: python3 -c 'print("1\nRaj\n2\n3\n\x37\x13\x00\x00\n4\n")' | ./protocol.bin
+
+The Execution: The player selects 4 to Authenticate. The program checks active_session->privilege_level, sees the injected 0x1337, and drops the flag: CH4KR4X2{P0D5_expl01t_k1t}

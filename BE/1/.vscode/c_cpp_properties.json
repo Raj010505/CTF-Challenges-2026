@@ -1,0 +1,19 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "WinLibs GCC x64",
+      "intelliSenseMode": "windows-gcc-x64",
+      "compilerPath": "C:/Users/Raj Dubey/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/gcc.exe",
+      "cStandard": "c23",
+      "cppStandard": "c++20",
+      "includePath": [
+        "${workspaceFolder}/heap-havoc/**",
+        "C:/Users/Raj Dubey/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include",
+        "C:/Users/Raj Dubey/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include",
+        "C:/Users/Raj Dubey/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed",
+        "C:/Users/Raj Dubey/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/x86_64-w64-mingw32/include"
+      ]
+    }
+  ]
+}

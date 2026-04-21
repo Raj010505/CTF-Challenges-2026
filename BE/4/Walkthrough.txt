@@ -1,0 +1,27 @@
+If a participant tries to feed the decompiled code to an AI, the AI will likely get stuck trying to explain the math inside JUNK_BRANCH or fail to accurately track the isValid flag through the randomized switch cases.
+
+Here is how a skilled player is meant to solve it:
+
+Initial Triage: The player runs strings vault.bin and notices standard libc functions, but no visible flag.
+
+Bypass Anti-Debug (Optional): If they try to run it in gdb, it will terminate due to the ptrace check. They will need to either patch the ptrace call out of the binary using a hex editor (changing the jump instruction) or use a tool like ltrace (which doesn't always trigger ptrace checks in the same way).
+
+Static Analysis (Ghidra/IDA): * They open the binary in Ghidra. They will see the verify_key function is a massive, confusing loop.
+
+A good reverse engineer will ignore the fake_path() calls once they realize (((x)*(x) + (x)) % 2 != 0) is mathematically impossible.
+
+Extracting the Logic:
+
+They will eventually isolate case 1: in the assembly/decompilation, which contains the core logic: (input[i] ^ 0x33) != vault[i].
+
+They will extract the 26-byte hex array (vault) from the binary's data section.
+
+Reversing the Flag:
+
+The player writes a quick Python script to reverse the XOR operation:
+
+Python
+vault = [0x70, 0x7b, 0x07, 0x78, 0x61, 0x07, 0x6b, 0x01, 0x48, 0x40, 0x47, 0x07, 0x50, 0x58, 0x6c, 0x40, 0x5e, 0x07, 0x06, 0x5b, 0x6c, 0x63, 0x03, 0x77, 0x06, 0x4e]
+flag = "".join([chr(b ^ 0x33) for b in vault])
+print(flag)
+Running the script outputs: CH4KR4X2{st4ck_sm45h_P0D5}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chakravyuha SMP - Developer Devlog</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background-color: #121212; color: #d4d4d4; line-height: 1.8; margin: 0; padding: 0; }
+        header { background-color: #1a1a1a; padding: 40px 20px; text-align: center; border-bottom: 4px solid #388e3c; }
+        header h1 { margin: 0; color: #4caf50; font-size: 2.5em; text-transform: uppercase; letter-spacing: 2px; }
+        .content { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        h2 { color: #81c784; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 50px; }
+        h3 { color: #aed581; }
+        .date { color: #757575; font-style: italic; margin-bottom: 30px; display: block; }
+        .code-block { background-color: #000; padding: 15px; border-left: 3px solid #4caf50; overflow-x: auto; color: #a5d6a7; }
+        .image-wrapper { text-align: center; margin: 40px 0; padding: 20px; background: #1a1a1a; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .image-wrapper img { max-width: 100%; border: 2px solid #333; }
+        .image-caption { color: #888; font-size: 0.85em; margin-top: 10px; }
+        footer { text-align: center; padding: 30px; background-color: #1a1a1a; margin-top: 80px; color: #555; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Chakravyuha SMP</h1>
+        <p>Developer Logs, Server Updates, and Blocky Architecture</p>
+    </header>
+
+    <div class="content">
+        <span class="date">Devlog Entry #42 - The Great Migration</span>
+        
+        <p>Welcome back, miners and crafters. It has been a wildly chaotic few weeks here on the Chakravyuha SMP server. As many of you noticed during the weekend stress test, our TPS (Ticks Per Second) dropped to an abysmal 8.4 when Uday decided to fire up his new industrial-scale bamboo farm at the exact same time three players were generating new chunks in the Nether.</p>
+
+        <h2>Redstone Optimization & The Lag Machine Problem</h2>
+        <p>Let's talk about redstone. We love it. We encourage automation. But we need to set some ground rules. We have identified several areas where hopper-minecarts are causing massive block-update lag. If you are building an item sorter with more than 100 slices, please consider using water streams for horizontal transport instead of chaining hoppers. The server CPU is practically melting.</p>
+
+        <div class="code-block">
+            // Current server optimization targets:
+            max-tick-time=60000
+            view-distance=12
+            entity-activation-range:
+              animals: 16
+              monsters: 24
+              raiders: 48
+        </div>
+
+        <p>We are currently writing a custom Spigot plugin to automatically clear dropped items from the world every 5 minutes instead of the default 10. This should help keep the entity count down when people leave their mob grinders running overnight.</p>
+
+        <h2>The Nether Hub Project</h2>
+        <p>Progress on the central Nether Hub is going smoothly. The ice roads are fully enclosed in glass now, meaning you won't get knocked into the lava oceans by rogue Ghast fireballs anymore (looking at you, Reisha). We are currently farming packed ice to extend the blue highway out to the Woodland Mansion coordinates we bought from the Cartographer villager.</p>
+
+        <p>We still need donations of blackstone and basalt to finish the architectural detailing on the main dome. Drop off your excess blocks in the community chests at spawn.</p>
+
+        <h2>Cloud Infrastructure Testing</h2>
+        <p>As part of our effort to make the server load faster, we are moving a lot of our web assets and dynamic maps off the main host and onto dedicated cloud storage. We are currently testing an S3 bucket to serve some of our high-res texture packs and server gallery images directly to your browsers. It's a bit experimental, so let me know if images are failing to load on your end.</p>
+
+        <div class="image-wrapper">
+            <img src="https://minecraft-ctf-start-chakravyuha.s3.amazonaws.com/website_image.png" alt="Server Infrastructure Test Image">
+            <div class="image-caption">Fig 1. Testing the new external cloud asset pipeline. If you see this, the S3 integration is working.</div>
+        </div>
+        <p>If that image loaded quickly, it means the new routing is successful. We'll be migrating the entire Dynmap render database over there by next Tuesday.</p>
+
+        <h2>Upcoming Events: The Chakravyuha End Raid</h2>
+        <p>Mark your calendars! Next Saturday, we are finally opening the portal to the End. We have located the stronghold, cleared out the silverfish spawner, and set up a forward operating base in the library. Bring your best enchanted diamond gear, slow-falling potions, and plenty of beds (if you are feeling reckless).</p>
+
+        <p>The dragon egg will go to whoever lands the killing blow, but the elytra raiding in the outer islands will be a free-for-all. We are considering implementing a temporary border in the End to keep everyone relatively close together for the first few days.</p>
+
+        <h2>Final Thoughts</h2>
+        <p>Thank you all for sticking with us through the growing pains. We are scaling up the RAM allocation tonight, which should require a brief 15-minute downtime at 3:00 AM server time. Keep mining, keep crafting, and watch out for creepers in the ravines.</p>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Chakravyuha Administration Team. Hosted locally, served globally.</p>
+    </footer>
+
+</body>
+</html>

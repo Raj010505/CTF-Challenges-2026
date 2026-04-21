@@ -1,0 +1,15 @@
+Challenge Document (Player-Facing)
+Title: Ghost in the Heap
+Category: Pwn / Binary Exploitation
+Difficulty: Extreme
+
+Briefing:
+We've isolated a vulnerable diagnostic console. Analyzing the binary reveals a clear vulnerability where the system blindly echoes back diagnostic logs. However, the system administrator was clever: the log buffer is isolated in dynamic memory, preventing standard format-string pointer injection.
+
+Your goal is to manipulate the system_checksum global variable to the exact value 0x1337BEEF to trigger the unlock protocol.
+
+Rules:
+
+Run the binary locally on a Linux machine.
+
+You do not need a remote server to get the flag; the binary will decrypt it locally if you successfully corrupt the memory state.

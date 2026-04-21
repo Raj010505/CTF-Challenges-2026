@@ -1,0 +1,44 @@
+Gemini said
+This is a perfect palate cleanser for Chakravyuha 2.0. Since the flag contains m1n3_b1n, I've themed this easy challenge around a block-building server console.
+
+For an "easy" binary exploitation challenge, the gold standard is a classic Stack Buffer Overflow overwriting a local variable. To make sure it works consistently across different systems without compiler reordering getting in the way, we group the buffer and the target variable together inside a struct.
+
+Here is the complete package.
+
+Challenge Overview
+Sr No	Challenge Name	Description	How To Make It	Riddle	Files/Website	Flag	Assigned To	Difficulty
+5	The Operator's Block	We found a legacy local administration portal for a block-building server. It grants 'Op' status to whitelisted users. Can you overflow its logic and force it to drop the server's hidden seed?	Compile operator.c with stack protectors disabled.	"Thirty-two blocks fill the chest perfectly. The thirty-third block breaks the bedrock."	operator.bin (Linux Executable)	CH4KR4X2{m1n3_b1n_h4ck_P0D5}	Raj	Easy
+Challenge Document (Player-Facing)
+Title: The Operator's Block
+Category: Pwn / Binary Exploitation
+Difficulty: Easy
+
+Briefing:
+You've gained access to a legacy authentication console for a local block-building server. It restricts operator (OP) privileges to specific usernames.
+
+However, the server runs on outdated, unsafe C functions. Find a way to exceed the allocated character limit and overwrite the underlying game mode memory state to grant yourself CREATIVE mode.
+
+Rules:
+
+Run the binary locally on a Linux machine.
+
+Trigger the hidden drop_seed() function to get the flag.
+
+Organizer Walkthrough (Intended Solution)
+This is a classic "hello world" of binary exploitation. The vulnerability is the gets() function, which does not check the length of the user's input.
+
+Decompilation / Analysis: A player opens the binary or reads the prompts and notices they are asked for an IGN (In-Game Name). If they throw it into a decompiler, they will see that player_name has a 32-byte capacity, and right next to it is the is_admin variable.
+
+The Flaw: Because gets() will keep reading input until the user presses Enter, a user can type more than 32 characters.
+
+The Overflow: Once the 32nd character is written, the 33rd character spills over into the adjacent memory space—which is occupied by ctx.is_admin.
+
+The Exploit: * The player runs the binary.
+
+When prompted for the IGN, they type 33 characters (e.g., AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA).
+
+The first 32 As fill the player_name buffer.
+
+The 33rd A overwrites ctx.is_admin changing its value from 0 to 65 (the ASCII value of 'A').
+
+Execution: Because is_admin is now 65 (which is != 0), the check if (ctx.is_admin != 0) passes, the drop_seed() function runs, and the flag decrypts: CH4KR4X2{m1n3_b1n_h4ck_P0D5}.

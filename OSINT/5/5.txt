@@ -1,0 +1,38 @@
+Challenge Writeup: The Hero in the Pixels
+Category: OSINT / Steganography
+Difficulty: Easy/Medium
+URL: https://csesa.live
+
+1. Challenge Description
+The flag is hidden in plain sight. Participants must visit the csesa.live landing page, identify the primary hero image, and use forensic observation to uncover the hidden flag embedded within the pixel data.
+
+2. Walkthrough
+Phase 1: Identification
+Upon landing on csesa.live, the user identifies the Hero Image (the large banner image at the top of the page). At standard browser zoom levels (100%), the flag is invisible to the naked eye as it is rendered at a microscopic pixel scale.
+
+Phase 2: Extraction
+There are two primary ways a participant can solve this:
+
+Method A: Browser Inspection (The Quick Way)
+
+Right-click the hero image and select Open Image in New Tab.
+
+Zoom in to the maximum level (usually 300%–500%) using Ctrl + Scroll.
+
+Scan the high-contrast areas (corners or edges of objects in the photo).
+
+Method B: Image Forensics (The Professional Way)
+
+Download the image file (e.g., hero.png or banner.jpg).
+
+Open the file in an image editor like GIMP, Photoshop, or Photopea.
+
+Increase the Contrast and adjust Levels to make the subtle pixel variations stand out.
+
+Use the zoom tool to reach 800% or 1600% magnification.
+
+Phase 3: Discovery
+The flag is located in the [Specify Location, e.g., Bottom-Right Corner] of the image. The text is written in a 1-pixel font.
+
+3. Flag
+CSESA{P1X3L_P33P1NG_MAST3R} (Note: Replace this with your actual flag)

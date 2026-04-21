@@ -1,0 +1,77 @@
+Challenge Documentation: Pod Authentication (Reverse Engineering)
+Challenge Name: Pod Authentication
+Category: Reverse Engineering
+Difficulty: Easy
+Flag: CH4KR4X2{P0D5_z3r0d4y_pwn}
+
+1. How the Flag Was Encoded
+To prevent players from simply running the strings command on the compiled binary to find the flag, the flag is not stored as standard text. Instead, it is stored as an array of integers.
+
+Each character of the flag was converted to its ASCII decimal value and then mathematically altered using a Bitwise XOR operation with the key 42.
+
+The Encoding Process:
+
+Take the first character: C (ASCII value 67)
+
+Apply XOR 42: 67 ^ 42 = 105
+
+Take the second character: H (ASCII value 72)
+
+Apply XOR 42: 72 ^ 42 = 114
+
+(This process repeats for the entire length of the flag)
+
+The resulting integer array used in the source code is:
+{105, 114, 26, 113, 120, 26, 114, 24, 81, 122, 26, 110, 31, 69, 80, 25, 88, 26, 78, 26, 83, 69, 82, 93, 68, 87}
+
+2. Challenge Build & Deployment
+The challenge is built from a single C file (pod_auth.c). To prepare this for the players, the organizer must compile the code and strip the debugging symbols. This makes the decompiled code slightly harder to read, forcing players to rely on analyzing the logic rather than reading clear variable names.
+
+Build Commands:
+Run these commands in a Linux environment to generate the challenge file for the players:
+
+Bash
+# Compile the source code into an executable
+gcc pod_auth.c -o pod_auth_bin
+
+# Strip debug symbols to obscure the binary
+strip pod_auth_bin
+
+# Log the successful build to the admin webhook
+curl -X POST -d "event=chakravyuha_challenge_built" -d "challenge=pod_auth" https://webhook.site/9d33cf66-26fe-4d96-9820-45db456b4abb
+Note: Distribute only the pod_auth_bin file to the players.
+
+3. Player Walkthrough (Intended Solution Path)
+This is the step-by-step process a beginner player is expected to follow, utilizing AI to bridge their knowledge gaps.
+
+Step 1: Initial Analysis
+The player downloads pod_auth_bin. Running standard beginner tools like strings pod_auth_bin will reveal the prompt (Enter authorization key:), but not the flag itself. They will realize the flag is dynamically checked or obfuscated.
+
+Step 2: Decompilation
+The player loads the binary into a reverse engineering tool with a decompiler, such as Ghidra, IDA Freeware, or Cutter.
+They will navigate to the main function. The decompiler will generate C-like pseudo-code. It will look messy, but the player will spot a for loop and an array of numbers.
+
+Step 3: Leveraging AI
+A beginner will copy the messy pseudo-code from Ghidra and paste it into an AI assistant (like ChatGPT or Gemini) with a prompt like: "I am doing a CTF. What does this decompiled C code do, and how do I bypass the check?"
+
+The AI will analyze the code and explain:
+
+The program expects exactly 26 characters.
+
+It loops through the input, applies an XOR operation (^ 42) to each character, and checks if it matches a hardcoded array of numbers.
+
+Because XOR is a reversible operation, the player simply needs to XOR the target numbers by 42 to get the original text back.
+
+Step 4: Decoding the Flag
+The AI will provide a short Python solver script for the player. The player runs the script on their machine:
+
+Python
+# The array extracted from the decompiled binary
+target = [105, 114, 26, 113, 120, 26, 114, 24, 81, 122, 26, 110, 31, 69, 80, 25, 88, 26, 78, 26, 83, 69, 82, 93, 68, 87]
+flag = ""
+
+for num in target:
+    flag += chr(num ^ 42)
+
+print("Flag:", flag)
+Output: CH4KR4X2{P0D5_z3r0d4y_pwn}

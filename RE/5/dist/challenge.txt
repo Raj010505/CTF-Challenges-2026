@@ -1,0 +1,16 @@
+POD5 Vault
+
+Category: Reverse Engineering
+Difficulty: Easy-Medium
+
+A tiny Java utility protects access to a vault.
+It accepts one input and returns access granted or denied.
+Recover the valid flag by reverse engineering the bytecode.
+
+Run:
+  java Pod5Vault
+or
+  java Pod5Vault "CH4KR4X2{example}"
+
+Flag format:
+  CH4KR4X2{...}

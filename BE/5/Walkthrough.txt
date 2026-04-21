@@ -1,0 +1,17 @@
+If an AI looks at this, it will tell the player to write a payload like \xaa\xbb\xcc\xdd%x%x%n. When the player tries this, it will fail completely because \xaa\xbb\xcc\xdd is on the heap, and %n only looks at the stack.
+
+Here is how an advanced CTF player solves it:
+
+Reconnaissance: Running the program gives them the address of system_checksum (e.g., 0x40404c). They realize the vulnerability is printf(diagnostic_buffer).
+
+Stack Inspection: They input %p %p %p %p %p... to leak the stack. They will notice none of their input reflects in the leaked pointers (confirming the heap allocation).
+
+Finding a Pointer Chain: They must look through the leaked stack values to find a pointer that points to another address further down the stack. For instance, the saved base pointer (rbp) of handle_input often points to the saved rbp of main.
+
+The Double Write:
+
+Stage 1: They use the first format string offset to write the address of system_checksum (0x40404c) into the lower half of the stack address pointed to by the first pointer.
+
+Stage 2: Now that the address 0x40404c actually exists on the stack, they use a second format specifier in the exact same payload to write the value 0x1337BEEF into that newly created stack pointer.
+
+Execution: The printf finishes processing the string, the if statement evaluates to true, and the hidden flag is decrypted and printed to the terminal.

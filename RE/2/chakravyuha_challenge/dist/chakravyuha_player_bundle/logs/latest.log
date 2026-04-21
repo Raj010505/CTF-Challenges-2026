@@ -1,0 +1,6 @@
+[21:07:11] [Render thread/INFO]: Loading 4 mods...
+[21:07:12] [Render thread/INFO]: EnderOptimizer initialized
+[21:07:12] [Render thread/WARN]: Gate I synchronized
+[21:07:12] [Render thread/WARN]: Gate II synchronized
+[21:07:12] [Render thread/ERROR]: Gate III unstable, fallback to portal.dat
+[21:07:13] [Render thread/INFO]: Native guard unavailable, using Java path

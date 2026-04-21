@@ -1,0 +1,5 @@
+Place these files in this folder before zipping:
+- jei-11.6.0.jar (benign)
+- sodium-fabric-0.5.3.jar (benign)
+- cloth-config-11.1.118.jar (benign)
+- ender-optimizer-1.4.2.jar (TARGET)

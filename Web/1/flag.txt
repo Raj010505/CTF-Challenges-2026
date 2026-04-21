@@ -1,0 +1,21 @@
+from PIL import Image
+
+# Open image and convert to RGB
+img = Image.open('obsidian.png').convert('RGB')
+pixels = img.load()
+
+# The flag to hide
+flag = "FLAG{0BS1D14N_SH4TT3R3D}"
+binary_flag = ''.join(format(ord(i), '08b') for i in flag) + '1111111111111110' # End marker
+
+data_index = 0
+for y in range(img.height):
+    for x in range(img.width):
+        r, g, b = pixels[x, y]
+        if data_index < len(binary_flag):
+            # Modify the Red channel's least significant bit
+            r = (r & ~1) | int(binary_flag[data_index])
+            pixels[x, y] = (r, g, b)
+            data_index += 1
+
+img.save('final_challenge.png')

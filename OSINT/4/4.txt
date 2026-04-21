@@ -1,0 +1,39 @@
+Q0g0S1I0WDJ7UDBENV8zbmQzcl90cjRja30=
+
+This write-up outlines the steps to solve the OSINT (Open Source Intelligence) challenge involving the CSESA website and social media footprint.
+
+Challenge Write-up: The Presidential Trail
+Challenge Overview
+Target: CSESA (Computer Science Engineering Students Association)
+
+Goal: Find the hidden flag located in an ex-president's Instagram post description.
+
+Entry Point: csesa.live
+
+Step 1: Reconnaissance (The Website)
+The journey begins at the official CSESA website. Navigating to csesa.live, the objective is to find links to their social media presence.
+
+Action: Scroll to the footer or the "Contact" section.
+
+Discovery: Locate the official Instagram icon link which directs to the CSESA official handle.
+
+Step 2: Identifying the Target (The Ex-President)
+To find the specific post mentioned, we need to identify the former leadership.
+
+Action: Navigate to the "Team" or "About Us" section on the website.
+
+Analysis: Look for the "Hall of Fame" or "Past Committees." Identify Divesh Kankani, who served as the President of the association.
+
+Step 3: Social Media Deep-Dive
+Once the name is confirmed, the search shifts to Instagram to find his personal or professional profile.
+
+Action: Search for "Divesh Kankani" on Instagram or find him tagged in the "Handover" posts on the official @csesa_ltce (or similar) account.
+
+Target Profile: Access Divesh’s profile.
+
+Step 4: Locating the Flag
+The challenge specifies that the flag is in the description of one of his posts.
+
+Action: Browse through posts related to his time at CSESA, specifically "Year-end" wrap-ups, "Core Committee" announcements, or technical posts.
+
+Extraction: Open the post and read the caption carefully. The flag is typically formatted as CSESA{...}.

@@ -1,0 +1,25 @@
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    padding-top: 20vh;
+    margin: 0;
+}
+
+.container {
+    border: 2px dashed #ccc;
+    padding: 40px;
+    display: inline-block;
+    background-color: #fff;
+    box-shadow: 4px 4px 15px rgba(0,0,0,0.05);
+}
+
+h1 {
+    color: #555;
+}
+
+p {
+    font-size: 14px;
+    color: #888;
+}

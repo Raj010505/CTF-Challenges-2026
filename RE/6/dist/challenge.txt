@@ -1,0 +1,15 @@
+Client Patch Gate
+
+Category: Reverse Engineering
+Difficulty: Medium
+
+A patched desktop client checks an unlock token before enabling debug mode.
+Reverse the verifier and recover the valid token.
+
+Run:
+  java ClientPatchGate
+or
+  java ClientPatchGate "CH4KR4X2{example}"
+
+Flag format:
+  CH4KR4X2{...}

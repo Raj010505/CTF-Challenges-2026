@@ -1,0 +1,16 @@
+Stev3 Patch Lab
+
+Category: Reverse Engineering
+Difficulty: Medium
+
+A legacy client has a hidden diagnostics switch.
+It validates a token with transformed byte checks and cross-index constraints.
+Reverse the bytecode and recover the valid token.
+
+Run:
+  java Stev3PatchLab
+or
+  java Stev3PatchLab "CH4KR4X2{example}"
+
+Flag format:
+  CH4KR4X2{...}

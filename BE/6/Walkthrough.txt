@@ -1,0 +1,25 @@
+If an AI reviews this code, it will likely see the if (target > 9) statement and declare the array access safe. It might mistakenly tell the player to look for a format string vulnerability in the printf statements (there are none).
+
+Here is how a player exploits the math oversight:
+
+Decompilation: The player opens oracle.bin in Ghidra or IDA. They notice the memory layout of the Subsystem struct. The security_clearance integer is 4 bytes, directly followed by the diagnostic_nodes array.
+
+Spotting the Flaw: They see that the program checks if the index is greater than 9, but does not check if it is less than 0. atoi() parses negative numbers perfectly fine.
+
+The Math: If the program writes to diagnostic_nodes[-1], it goes backward exactly 4 bytes (the size of one integer) in memory. This places it perfectly on top of security_clearance.
+
+The Target Value: The program requires security_clearance to equal 0x2152414a. The player needs to convert this hex value into decimal to input it via atoi().
+
+0x2152414a in decimal is 559038794.
+
+The Exploit Execution:
+
+Program asks: Enter target node index to update (0-9):
+
+Player enters: -1
+
+Program asks: Enter new calibration value:
+
+Player enters: 559038794
+
+The program writes the value backward, overwriting the clearance check, and outputs the flag: CH4KR4X2{1nt3g3r_und3rfl0w_pwn}

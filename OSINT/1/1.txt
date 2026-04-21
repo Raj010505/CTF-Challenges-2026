@@ -1,0 +1,58 @@
+OSINT CHALLENGE WRITEUP: WHISPERS IN THE DNS
+
+CHALLENGE INFORMATION
+Challenge Name: Whispers in the DNS
+Category: OSINT / Forensics
+Difficulty: Easy
+Domain: csesa.live
+Flag: flag{DNS_1s_N3v3r_TrulY_H1dd3n}
+
+CHALLENGE DESCRIPTION (PLAYER PROMPT)
+"We've been monitoring the infrastructure of a suspected threat actor. They seem to be using their public domain, csesa.live, to pass hidden messages to their affiliates without hosting any actual web content. Can you interrogate their domain infrastructure and uncover the secret flag?"
+
+INFRASTRUCTURE SETUP (ADMIN GUIDE)
+To deploy this challenge, the administrator must configure the DNS settings for the target domain.
+
+Access the DNS Management console for csesa.live (e.g., Cloudflare, Route53, Namecheap).
+
+Create a new DNS Record with the following parameters:
+Type: TXT
+Name/Host: @ (Root domain)
+Value: flag{DNS_1s_N3v3r_TrulY_H1dd3n}
+TTL: 3600 (or default)
+
+Save the record and allow up to 15-30 minutes for global DNS propagation before launching the challenge.
+
+INTENDED SOLUTION & WALKTHROUGH
+The core objective of this challenge is to test the player's knowledge of the Domain Name System (DNS) and their ability to retrieve non-standard records. While A and CNAME records are used to route web traffic, TXT records are often used for domain verification, SPF rules, and in this case, hiding arbitrary text.
+
+Since browsing to http://csesa.live won't reveal the flag, players must use command-line utilities to query the DNS servers directly.
+
+METHOD 1: USING DIG (DOMAIN INFORMATION GROPER)
+dig is the standard tool for interrogating DNS name servers. Players can specifically request the TXT records by specifying the type before the domain.
+
+Command:
+dig TXT csesa.live
+
+Expected Output Snippet:
+;; ANSWER SECTION:
+csesa.live.        3600    IN    TXT    "flag{DNS_1s_N3v3r_TrulY_H1dd3n}"
+
+METHOD 2: USING NSLOOKUP
+For players on Windows or those who prefer nslookup, the utility can be instructed to query only for TXT records using the -type flag.
+
+Command:
+nslookup -type=txt csesa.live
+
+Expected Output Snippet:
+Non-authoritative answer:
+csesa.live   text = "flag{DNS_1s_N3v3r_TrulY_H1dd3n}"
+
+METHOD 3: USING HOST
+The host command is a simple utility for performing DNS lookups and is slightly more concise than dig.
+
+Command:
+host -t txt csesa.live
+
+Expected Output Snippet:
+csesa.live descriptive text "flag{DNS_1s_N3v3r_TrulY_H1dd3n}"

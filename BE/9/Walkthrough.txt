@@ -1,0 +1,79 @@
+Challenge Document (Player-Facing)
+Title: The Obsidian Hypervisor
+Category: Pwn / Reverse Engineering
+Difficulty: Extreme
+
+Briefing:
+You are facing a custom-built Virtual Machine. It doesn't run standard x86 code; it only understands its own proprietary hex-encoded bytecode.
+
+The VM gives you 128 bytes of isolated RAM and 4 registers. When the VM finishes execution, it safely shuts down via a callback pointer. Analyze the interpreter's logic, find the boundary flaw in the custom instruction set, and write a custom bytecode payload that hijacks the hypervisor to open the Nether portal.
+
+Rules:
+
+Run the binary locally on a Linux machine.
+
+Submit your payload as a continuous hex string (e.g., 0100AABB...).
+
+
+Organizer Walkthrough (Intended Solution)
+This requires actual reverse engineering. Here is how the top players will tear this down:
+
+Decompiling the Custom VM:
+The player opens Ghidra and figures out what the Hex inputs actually do. They will map out the Custom Assembly Language:
+
+01 R VVVV : Load 4-byte Value VVVV into Register R.
+
+02 O R : Store the 4-byte value from Register R into RAM at Offset O.
+
+FF : Halt execution.
+
+Finding the Bug:
+They look at the STORE logic. offset is parsed from the hex string as an 8-bit integer, meaning it can be anything from 0 to 255. However, the ram array is only 128 bytes.
+
+Mapping the Memory layout:
+They analyze the VM_Core struct:
+
+ram = 128 bytes (Offset 0 to 127)
+
+reg = 16 bytes (Offset 128 to 143)
+
+halt_callback = 8 bytes (Offset 144 to 151)
+
+The Exploit Strategy:
+They need to overwrite the halt_callback pointer at offset 144 with the address of enter_nether(). Since pointers are 64-bit (8 bytes) and the VM can only write 32-bits (4 bytes) at a time, they must do it in two stages.
+
+Building the Bytecode Payload:
+
+Let's say the binary prints Nether Portal Anchor Function at: 0x401234
+
+Step 1: Load the lower 4 bytes of the address (0x00401234) into Register 0 (R0).
+
+Assembly: LOAD R0, 0x00401234
+
+Hex: 01 00 34 12 40 00 (Little Endian byte order)
+
+Step 2: Store R0 into memory at offset 144 (0x90 in hex).
+
+Assembly: STORE 0x90, R0
+
+Hex: 02 90 00
+
+Step 3: Load the upper 4 bytes of the address (0x00000000) into Register 1 (R1).
+
+Assembly: LOAD R1, 0x00000000
+
+Hex: 01 01 00 00 00 00
+
+Step 4: Store R1 into memory at offset 148 (0x94 in hex).
+
+Assembly: STORE 0x94, R1
+
+Hex: 02 94 01
+
+Step 5: Halt.
+
+Hex: FF
+
+Execution:
+The player concatenates the hex payload: 010034124000029000010100000000029401FF.
+They paste this into the prompt. The VM reads outside its bounds, corrupts its own exit routine, and spawns the flag CH4KR4X2{P0D5_r00t_sh3ll_n3th3r}.

@@ -1,0 +1,15 @@
+Challenge Document (Player-Facing)
+Title: The Neural Labyrinth
+Category: Reverse Engineering
+Difficulty: Hard
+
+Briefing:
+We secured this executable from a compromised node. Intelligence suggests the developer specifically designed it to break automated analysis tools and AI decompilers by completely scrambling its own control flow. Your standard "decompile and ask an LLM" strategy will only lead you down fake mathematical rabbit holes.
+
+You need to figure out what the program is actually doing behind the noise to uncover the passphrase.
+
+Rules:
+
+Run the binary locally on a Linux machine.
+
+The flag format is standard.

@@ -1,0 +1,24 @@
+🚩 CTF Writeup: Audio Phase SteganographyCategory: Forensics / SteganographyDifficulty: MediumFlag: RAJ{WAVE}📝 Challenge OverviewPlayers are provided with a video file containing a 50-second audio track. Listening to the audio reveals normal dialogue, but with a faint, harsh static noise lingering in the background. The goal is to isolate that noise and decode it.🕵️‍♂️ The Vulnerability: Phase CancellationThe audio is a stereo track. The dialogue is identical in both the Left and Right channels (In-Phase). However, the hidden static noise is inverted in one of the channels (Out-of-Phase).By splitting the audio channels, mathematically inverting one of them, and adding them back together, the dialogue perfectly cancels itself out ($1 + (-1) = 0$), leaving only the hidden noise, which doubles in volume.Here are two ways to solve it.🛠️ Solution 1: The Visual Way (Audacity)This is the standard, tool-based approach most players will take.Step 1: Extract and ImportDrag and drop the provided CTF_Video_Challenge.mkv directly into Audacity. Audacity will automatically strip the video and extract the stereo audio track.Step 2: Split the Stereo TrackClick the small downward-pointing arrow next to the track name on the left-hand control panel.Select Split Stereo to Mono. You now have two separate tracks (Left and Right).Step 3: Phase InversionSelect the bottom track by clicking the Select button on its left panel.Go to the top menu: Effect > Invert. The waveform will flip upside down.Step 4: Mix Down (Cancellation)Select both tracks (Hold Shift and click both "Select" buttons).Go to Tracks > Mix > Mix and Render.Result: The dense waveforms of the dialogue completely flatline into silence. All that remains is a small, 6-second block of noise around the 20-second mark!Step 5: Read the SpectrogramClick the dropdown arrow next to the new track's name.Select Spectrogram view.Zoom in on the 6-second noise block. The frequencies spell out the flag: RAJ{WAVE}.💻 Solution 2: The Hacker Way (Command Line & Python)For players who prefer scripting, this entire challenge can be solved with a single FFmpeg command and a short Python script.Step 1: The FFmpeg One-LinerInstead of opening Audacity, players can use FFmpeg's pan audio filter to subtract the Right channel from the Left channel instantly.Bashffmpeg -i CTF_Video_Challenge.mkv -af "pan=mono|c0=0.5*c0-0.5*c1" isolated_secret.wav
+Explanation: This command extracts the audio, forces it to mono, and defines the new channel (c0) as half of the Left channel minus half of the Right channel. The dialogue is mathematically destroyed.Step 2: Python Spectrogram ExtractorOnce the isolated_secret.wav is generated, players can write a quick Python script using matplotlib to plot the frequencies and read the flag.Dependencies needed:Bashpip install scipy matplotlib numpy
+The Solve Script (solve.py):Pythonimport matplotlib.pyplot as plt
+from scipy.io import wavfile
+from scipy import signal
+import numpy as np
+
+print("[*] Reading isolated audio...")
+sample_rate, samples = wavfile.read('isolated_secret.wav')
+
+print("[*] Generating Spectrogram...")
+# Perform the Short-Time Fourier Transform (STFT)
+frequencies, times, spectrogram = signal.spectrogram(samples, sample_rate)
+
+# Plot the data
+plt.pcolormesh(times, frequencies, 10 * np.log10(spectrogram), shading='gouraud')
+plt.ylabel('Frequency [Hz]')
+plt.xlabel('Time [sec]')
+plt.title('CTF Flag Reveal')
+plt.ylim(0, 20000) # Limit to human hearing range
+
+print("[+] Displaying Flag!")
+plt.show()
+Running this script pops up a window displaying a heat map of the audio frequencies, clearly showing RAJ{WAVE}.

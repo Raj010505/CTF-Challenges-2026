@@ -1,0 +1,15 @@
+Challenge Document (Player-Facing)
+Title: The Oracle's Blind Spot
+Category: Pwn / Binary Exploitation
+Difficulty: Hard
+
+Briefing:
+You have acquired the Sector Oracle Calibration Tool. The engineers boast that it is completely memory-safe because they rigorously check that users cannot write past the end of the diagnostic array.
+
+However, they seem to have forgotten a fundamental rule of mathematics and data types. Find the blind spot, overwrite your security clearance, and access the mainframe.
+
+Rules:
+
+Run the binary locally on a Linux machine.
+
+To unlock the flag, your security clearance must equal 0x2152414a.

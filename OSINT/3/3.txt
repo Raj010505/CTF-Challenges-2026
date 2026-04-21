@@ -1,0 +1,56 @@
+🚩 Challenge Writeup: The King's Legacy
+Category: OSINT / Minecraft
+
+Difficulty: Medium
+
+Challenge Creator: [Your Name/Team Name]
+
+Target URL: https://www.youtube.com/@TheGreatPotatoKingShorts
+
+📖 1. Mission Briefing
+The world of Minecraft lost one of its greatest legends, a tactician who proved that "Technoblade never dies." To solve this challenge, you must navigate through a digital trail to find the specific timestamps of his life’s journey.
+
+The Objective: Find the Month and Year of the legend's birth and the Month and Year of his passing.
+
+Flag Format: Flag{Month_Year_Month_Year}
+
+🔍 2. Investigation (Step-by-Step)
+Step 1: The Initial Pivot
+The challenge begins with an image of a player watching a Minecraft tribute. Upon closer inspection (zooming into the Address Bar of the browser in the image), players identify the custom YouTube handle:
+
+youtube.com/@TheGreatPotatoKingShorts
+
+Step 2: Analyzing the YouTube Channel
+Visiting the channel reveals a dedicated tribute space.
+
+The Banner: Contains the text "Start and end of an era." This is a direct hint that the flag involves the start (birth) and end (death) of the person the channel is dedicated to.
+
+The Content: The channel features clips of Technoblade, identifying the subject of our investigation.
+
+Step 3: Open Source Research
+Using the identity "Technoblade," we perform a search for his biographical information.
+
+Search Query: Technoblade birth and death dates or Technoblade Wikipedia.
+
+Finding 1 (Birth): Multiple sources (Wikipedia, Fandom) confirm Alexander (Technoblade) was born on June 1, 1999.
+
+Finding 2 (Death): His family released the "so long nerds" video on June 30, 2022. Sources confirm he passed away in June 2022.
+
+Step 4: Constructing the Flag
+Following the required format Flag{Month_Year_Month_Year}:
+
+Start: June_1999
+
+End: June_2022
+
+🏆 3. Final Flag
+Flag{June_1999_June_2022}
+
+🛠️ Tools Used
+Browser Inspection: To navigate the YouTube UI.
+
+Image Analysis: Zooming in to find the URL.
+
+Search Engines: Google/DuckDuckGo for biographical data.
+
+Webhook Monitoring: (Optional) Used to track player discovery of the channel.

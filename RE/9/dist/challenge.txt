@@ -1,0 +1,16 @@
+Ender Rev Node
+
+Category: Reverse Engineering
+Difficulty: Medium
+
+A legacy service node validates an activation key with layered byte transforms.
+There is also a suspicious developer compatibility parser.
+Reverse the bytecode to recover the real flag.
+
+Run:
+  java EnderRevNode
+or
+  java EnderRevNode "CH4KR4X2{example}"
+
+Flag format:
+  CH4KR4X2{...}

@@ -1,0 +1,34 @@
+If a player encounters this binary, here is how they would reverse engineer it.
+
+Phase 1: Static Analysis Initial Recon
+
+Running strings challenge yields nothing useful. Raj{Test} is nowhere to be found.
+
+The player loads the binary into Ghidra. They navigate to the main function and are immediately greeted by a massive while(true) loop with a messy switch statement. The visual graph looks completely flattened.
+
+Phase 2: Decoding the State Machine
+
+The player must trace the state variable manually. They see that state = 1 checks the length of an input argument (argc == 2) and expects a length of 9.
+
+They trace the flow to state = 2, which checks if (argc > 0). They realize this is an opaque predicate (always true) and ignore the state = 99 branch.
+
+They follow the true branch to state = 3.
+
+Phase 3: Cryptanalysis
+
+In state = 3, they spot an array of bytes being loaded into memory: [0x10, 0x23, 0x28, 0x39, 0x16, 0x27, 0x31, 0x36, 0x3F].
+
+They find the core logic: if ((user_input[i] ^ 0x42) != hidden_array[i]).
+
+The solver realizes the binary is XORing their input with 0x42 and comparing it against the hidden array.
+
+Phase 4: The Script
+The player writes a quick Python script to reverse the operation:
+
+Python
+hidden = [0x10, 0x23, 0x28, 0x39, 0x16, 0x27, 0x31, 0x36, 0x3F]
+flag = ""
+for byte in hidden:
+    flag += chr(byte ^ 0x42)
+print("Found flag:", flag)
+# Output: Found flag: Raj{Test}

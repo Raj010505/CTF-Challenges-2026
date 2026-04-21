@@ -1,0 +1,16 @@
+Debug Mob Auth
+
+Category: Reverse Engineering
+Difficulty: Medium
+
+A mobile client validates a privileged token with transformed byte checks.
+There may also be a weakness in the debug-token parser.
+Reverse the class and recover the real flag.
+
+Run:
+  java DebugMobAuth
+or
+  java DebugMobAuth "CH4KR4X2{example}"
+
+Flag format:
+  CH4KR4X2{...}
