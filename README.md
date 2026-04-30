@@ -235,4 +235,22 @@ CTF-Challenges-2026/
 
 ---
 
+Contributing
+
+Contributions are welcome! Fork this repo, create a new branch, and submit a pull request.
+
+License
+
+This project is licensed under the MIT License.
+
+Contact
+
+For any issues or queries, contact iot.reisha@gmail.com
+
+Partner
+
+Reisha:- https://github.com/Reisha15
+
+Raj:- https://github.com/Raj010505
+
 **Happy Hacking! 🎯 Good luck with the CTF challenges!**
